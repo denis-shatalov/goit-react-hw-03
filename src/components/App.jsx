@@ -1,49 +1,52 @@
-import Description from "./Description/Description";
-import Feedback from "./Feedback/Feedback";
-import Options from "./Options/Options";
-import { useState, useEffect } from "react";
-import Notifications from "./Notifications";
+import SearchBox from "./SearchBox/SearchBox";
+import ContactList from "./ContactList/ContactList";
+import ContactForm from "./ContactForm/ContactForm";
+
+
+import { useEffect, useState } from "react";
+
+const initialValues =  [
+  {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
+  {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
+  {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
+  {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
+        ]
 
 export default function App() {
 
-    const [clicks, setClicks] = useState(() => {
-        try {
-            const saveClicks = localStorage.getItem("selectedClicks");
-            return saveClicks ? JSON.parse(saveClicks) : { good: 0, neutral: 0, bad: 0 };
-        } catch (error) {
-            console.error("Ошибка парсинга localStorage:", error);
-            return { good: 0, neutral: 0, bad: 0 };
-        }
-    });
+  const [values, setValues] = useState(() => {
+    const saveContacts = localStorage.getItem("contacts");
+    return saveContacts ? JSON.parse(saveContacts) : initialValues;
+  });
+    
 
-    const handleClick = (key) => {
-        if (key === "reset") {
-            setClicks({ good: 0, neutral: 0, bad: 0 });
-        } else {
-            setClicks(prevClicks => ({
-                ...prevClicks,
-                [key]: prevClicks[key] + 1
-            }));
-        }
-    };
+    const [searchTerm, setSearchTerm] = useState("")
+    
+    const addContacts = (newValue) => {
+        setValues([...values, newValue])
+        
+    }
+
+    const filteredContacts = values.filter((contact) =>
+        contact.name.toLowerCase().includes(searchTerm.toLowerCase()))
+
+
+    const removeContact = (id) => {
+    setValues(values.filter(value => value.id !== id));
+  };
 
     useEffect(() => {
-        if (clicks) {
-            try {
-                localStorage.setItem("selectedClicks", JSON.stringify(clicks));
-            } catch (error) {
-                console.error("Ошибка записи в localStorage:", error);
-            }
-        }
-    }, [clicks]);
-
-    const totalFeedback = (clicks?.good || 0) + (clicks?.neutral || 0) + (clicks?.bad || 0);
+        localStorage.setItem("contacts", JSON.stringify(values))
+    },[values])
 
     return (
         <div>
-            <Description />
-            <Options handleClick={handleClick} totalFeedback={totalFeedback} />
-            {totalFeedback > 0 ? <Feedback clicks={clicks} totalFeedback={totalFeedback} /> : <Notifications />}
-        </div>
-    );
+            <h1>Phonebook</h1>
+            <ContactForm addContacts={addContacts} />
+            <SearchBox searchTerm={searchTerm} onFilter={setSearchTerm} />
+            <ContactList values={filteredContacts} removeContact={removeContact} />
+            
+</div>
+
+    )
 }

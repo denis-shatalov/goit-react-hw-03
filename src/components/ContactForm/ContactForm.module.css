@@ -1,0 +1,40 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border: 1px solid black;
+    border-radius: 6px;
+    padding: 10px;
+    height: 200px;
+    width: 260px;
+    margin: auto;
+    
+}
+ 
+
+input {
+        margin-bottom: 10px;
+}
+
+button {
+    max-width: 120px;
+    background-color: rgb(95, 95, 199);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    padding: 6px;
+}
+
+button:hover{
+    background-color: rgb(76, 76, 197);
+}
+
+.error{
+    color: orangered;
+    font-size: 14px;
+   
+   
+   
+}

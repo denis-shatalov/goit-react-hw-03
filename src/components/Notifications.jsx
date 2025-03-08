@@ -1,6 +1,6 @@
 export default function Notifications() {
 
     return (
-        <p>No feedback yet.</p>
+        <p>Нiчого не знайдено...</p>
     )
 }
